@@ -8,7 +8,7 @@ services:
     platform: linux/x86_64
     working_dir: /app-backend
     volumes: 
-      - ./backend/src:/app-backend/src
+      - ./backend:/app-backend
     depends_on:
       db:
         condition: service_healthy
@@ -28,14 +28,20 @@ services:
     container_name: db
     platform: linux/x86_64
     ports:
-      - 3002:5432
+      - 5432:5432
     environment:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_USER=root
     restart: 'always'
+    volumes:
+      - pgdata:/data/postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       timeout: 10s
       retries: 5
     cap_add:
       - SYS_NICE
+
+volumes:
+  pgdata:
+    driver: local
