@@ -32,6 +32,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_USER=root
+      - POSTGRES_DB=personal_bank
     restart: 'always'
     volumes:
       - pgdata:/data/postgres

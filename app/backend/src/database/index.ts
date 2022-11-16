@@ -6,7 +6,8 @@ const AppDataSource = new DataSource({
     port: 5432,
     username: 'root',
     password: '123456',
-    database: 'personal-bank',
+    database: 'personal_bank',
+    migrations: ["src/database/migrations/*.ts"],
 })
 
 AppDataSource.initialize()
