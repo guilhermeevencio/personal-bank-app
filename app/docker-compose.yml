@@ -15,10 +15,11 @@ services:
     environment:
       - APP_PORT=3001
       - JWT_SECRET=jwt_secret
-      - DB_USER=root
-      - DB_PASS=123456
-      - DB_HOST=db
-      - DB_PORT=5432
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=personal_bank
+      - POSTGRES_PORT=5432
     healthcheck:
       test: ["CMD", "lsof", "-t", "-i:3001"]
       timeout: 10s
