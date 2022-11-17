@@ -35,7 +35,6 @@ class UserRepository implements IUsersRepository {
       const user = this.userRepository.create({ username, password })
 
       const errors = await validate(user)
-      console.log(errors);
       
       if (errors.length > 0) {
         throw new CustomError('Make sure if your username has more than 3 charachters', 401)
