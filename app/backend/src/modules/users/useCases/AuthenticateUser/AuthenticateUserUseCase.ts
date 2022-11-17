@@ -1,9 +1,10 @@
 import { inject, injectable } from "tsyringe";
 import { compare } from 'bcrypt'
-import 'dotenv/config'
 import jwt from 'jsonwebtoken'
+import 'dotenv/config'
 import { IUserDTO } from "../../dtos/IUserDTO";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
+import CustomError from "../../../../errors/CustomError";
 
 interface IResponse {
   username: string,
@@ -15,17 +16,17 @@ class AuthenticateUserUseCase {
   constructor(
     @inject('UserRepository')
     private usersRepository: IUsersRepository
-  ) { }
+  ) {}
   async execute({ username, password }: IUserDTO): Promise<IResponse> {
     const user = await this.usersRepository.findByUsername(username)
     if (!user) {
-      throw new Error("Invalid email or password!");
+      throw new CustomError('Invalid username or password!', 401)
     }
 
     const isPasswordValid = await compare(password, user.password)
     
     if (!isPasswordValid) {
-      throw new Error("Invalid email or password!");
+      throw new CustomError('Invalid username or password!', 401)
     }
 
     const token = jwt.sign({ username }, process.env.JWT_SECRET || 'jwt_secret', {

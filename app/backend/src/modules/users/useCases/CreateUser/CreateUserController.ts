@@ -1,3 +1,4 @@
+import CustomError from "../../../../errors/CustomError";
 import { Request, Response } from "express";
 import { container } from 'tsyringe'
 import { CreateUserUseCase } from "./CreateUserUseCase";
@@ -6,6 +7,10 @@ import { CreateUserUseCase } from "./CreateUserUseCase";
 class CreateUserController {
   async handle(req: Request, res: Response): Promise<Response> {
     const { username, password } = req.body
+
+    if (!username || !password) {
+      throw new CustomError('username and password required!', 400)
+    }
     
     const createUserUseCase = container.resolve(CreateUserUseCase)
 
