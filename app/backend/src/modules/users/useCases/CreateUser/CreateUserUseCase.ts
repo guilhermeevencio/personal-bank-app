@@ -8,8 +8,8 @@ import CustomError from '../../../../errors/CustomError';
 class CreateUserUseCase {
   constructor(
     @inject('UserRepository')
-    private usersRepository: IUsersRepository
-  ) { }
+    private usersRepository: IUsersRepository,
+  ) {}
 
   async execute({ username, password }: IUserDTO): Promise<void> {
     const userAlreadyExists = await this.usersRepository.findByUsername(username)
@@ -17,6 +17,7 @@ class CreateUserUseCase {
     if (userAlreadyExists) throw new CustomError("User Already Exists!", 400)
 
     const passwordHash = await hash(password, 8)
+
     await this.usersRepository.create({ username, password: passwordHash })
   }
 
