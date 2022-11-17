@@ -1,7 +1,10 @@
 import { Router } from 'express'
+import { CreateUserController } from '../modules/users/useCases/CreateUser/CreateUserController'
 
-const userRoutes = Router()
+const userRouter = Router()
 
-userRoutes.post('/login', (req, res) => res.status(201).json({ message: 'rota de login' }))
+const createUserController = new CreateUserController()
 
-export { userRoutes }
+userRouter.post('/', createUserController.handle)
+
+export { userRouter }
