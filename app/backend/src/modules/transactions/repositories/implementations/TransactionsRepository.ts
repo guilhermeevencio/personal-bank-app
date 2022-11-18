@@ -1,10 +1,10 @@
-import { Transaction } from "../../entities/Transaction";
-import { Repository, QueryRunner } from "typeorm";
-import { ITransactionsRepository } from "../ITransactionsRepository";
-import { Account } from "../../../users/entities/Account";
-import AppDataSource from "../../../../database";
-import { ITransactionDTO } from "../../dtos/ITransactionDTO";
-import CustomError from "../../../../errors/CustomError";
+import { Transaction } from '../../entities/Transaction';
+import { Repository, QueryRunner } from 'typeorm';
+import { ITransactionsRepository } from '../ITransactionsRepository';
+import { Account } from '../../../users/entities/Account';
+import AppDataSource from '../../../../database';
+import { ITransactionDTO } from '../../dtos/ITransactionDTO';
+import CustomError from '../../../../errors/CustomError';
 
 
 class TransactionsRepository implements ITransactionsRepository {
@@ -27,25 +27,34 @@ class TransactionsRepository implements ITransactionsRepository {
         creditedAccountId,
         debitedAccountId,
         value,
+        description
       } = data
 
-      const { balance: accountToAddMoneyBalance } = await this.accountsRepository.findOne({ where: { id: creditedAccountId } })
+      const accountToAddMoney = await this.accountsRepository.findOne({ where: { id: creditedAccountId } })
 
-      const { balance: accountToDebitMoneyBalance } = await this.accountsRepository.findOne({ where: { id: debitedAccountId } })
+      const accountToDebitMoney = await this.accountsRepository.findOne({ where: { id: debitedAccountId } })
 
-      if (accountToDebitMoneyBalance < value) throw new CustomError('Insuficient funds!', 400)
+      if (accountToDebitMoney.balance < value) throw new CustomError('Insuficient funds!', 400)
 
       await this.accountsRepository.update(
         { id: creditedAccountId },
-        { balance: (value + accountToAddMoneyBalance) }
+        { balance: (value + accountToAddMoney.balance) }
       )
 
       await this.accountsRepository.update(
         { id: debitedAccountId },
-        { balance: (accountToDebitMoneyBalance - value) }
+        { balance: (accountToDebitMoney.balance - value) }
       )
 
-      const transaction = this.transactionsRepository.create(data)
+      const transaction = this.transactionsRepository.create(
+        {
+          value,
+          description,
+          creditedAccountId: accountToAddMoney,
+          debitedAccountId: accountToDebitMoney,
+        }
+      )
+
       const createdTransaction = await this.transactionsRepository.save(transaction)
 
       await this.queryRunner.commitTransaction()
@@ -54,7 +63,21 @@ class TransactionsRepository implements ITransactionsRepository {
       await this.queryRunner.rollbackTransaction()
       throw new CustomError(err.message, 400)
     }
+  }
 
+  async findAllTransactionsByAccountId(accountId: string): Promise<Transaction[]> {
+    const account = await this.accountsRepository.findOne({ where: { id: accountId } })
+    // const teste = await AppDataSource.createQueryBuilder(Account, 'account')
+    //   .select("account.id", 'id')
+    //   .getMany()
+    // // .from('accounts', 'accounts')
+    // console.log(teste);
+    
+    const transactions = await this.transactionsRepository.find({
+      where: [{ creditedAccountId: account }, { debitedAccountId: account }]
+    })
+
+    return transactions
   }
 
   async findAccount(accountId: string): Promise<Account> {

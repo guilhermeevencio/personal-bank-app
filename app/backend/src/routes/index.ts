@@ -9,6 +9,6 @@ const router = Router()
 
 router.use('/users', userRouter)
 router.use(authenticateRoutes)
-router.use('/transactions', transactionsRouter)
+router.use('/transactions',authMiddleware, transactionsRouter)
 
 export { router }

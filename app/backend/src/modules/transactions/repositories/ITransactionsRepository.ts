@@ -5,6 +5,7 @@ import { Account } from 'modules/users/entities/Account';
 interface ITransactionsRepository {
   createTransaction(data: ITransactionDTO): Promise<Transaction>
   findAccount?(accountId: string): Promise<Account>
+  findAllTransactionsByAccountId(accountId: string): Promise<Transaction[]>
   findAllByDate?(createdDate: Date): Promise<Transaction[]>
   findAllByOperation?(operation: 'cash-out' | 'cash-in'): Promise<Transaction[]>
 }
