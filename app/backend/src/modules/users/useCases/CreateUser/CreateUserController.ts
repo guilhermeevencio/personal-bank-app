@@ -14,7 +14,7 @@ class CreateUserController {
     }
 
     if (!regularExpression.test(password)) {
-      throw new CustomError('Your password must have at least 8 characters, one uppercase letter, one lowercase letter and one number.', 400)
+      throw new CustomError('Your password must have at least 8 characters, one uppercase letter and one number.', 400)
     }
     
     const createUserUseCase = container.resolve(CreateUserUseCase)
