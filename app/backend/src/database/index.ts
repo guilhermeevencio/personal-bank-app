@@ -10,6 +10,7 @@ const AppDataSource = new DataSource({
     database: 'personal_bank',
     migrations: ["src/database/migrations/*.ts"],
     entities: ["src/modules/**/entities/*.ts"],
+    synchronize: true,
 })
 
 AppDataSource.initialize()

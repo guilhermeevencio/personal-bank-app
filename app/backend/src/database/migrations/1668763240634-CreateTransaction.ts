@@ -44,7 +44,7 @@ export class CreateTransaction1668763240634 implements MigrationInterface {
                 referencedTableName: 'accounts',
                 referencedColumnNames: ['id']
             })
-        ),
+        )
         await queryRunner.createForeignKey(
             'transactions',
             new TableForeignKey({

@@ -1,6 +1,6 @@
 import { Account } from '../../users/entities/Account'
 import { v4 as uuidV4 } from 'uuid'
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn} from 'typeorm'
+import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn} from 'typeorm'
 
 
 @Entity('transactions')
@@ -8,10 +8,11 @@ class Transaction {
   @PrimaryColumn()
   id: string
 
-  @ManyToOne(() => Account, (account) => account.transactions, { eager: true })
-  debittedAcount: string
 
-  @ManyToOne(() => Account, (account) => account.transactions, { eager: true })
+  @ManyToOne(() => Account, { eager: true })
+  debitedAcountId: Account
+
+  @ManyToOne(() => Account, { eager: true })
   creditedAccount: string
 
   value: number

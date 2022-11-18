@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 export class CreateAccount1668712481478 implements MigrationInterface {
 
@@ -16,10 +16,22 @@ export class CreateAccount1668712481478 implements MigrationInterface {
                         name: 'balance',
                         type: 'int',
                     },
+                    // {
+                    //     name: 'debitedAcountId',
+                    //     type: 'uuid'
+                    // }
                 ]
             }),
             true,
         )
+        // await queryRunner.createForeignKey(
+        //     'accounts',
+        //     new TableForeignKey({
+        //         columnNames: ['debitedAcountId'],
+        //         referencedTableName: 'transactions',
+        //         referencedColumnNames: ['id']
+        //     })
+        // )
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
