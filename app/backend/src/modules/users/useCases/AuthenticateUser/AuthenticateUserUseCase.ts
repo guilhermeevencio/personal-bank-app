@@ -5,10 +5,12 @@ import 'dotenv/config'
 import { IUserDTO } from "../../dtos/IUserDTO";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 import CustomError from "../../../../errors/CustomError";
+import { Account } from "modules/users/entities/Account";
 
 interface IResponse {
   username: string,
-  token: string
+  token: string,
+  account: Account
 }
 
 @injectable()
@@ -21,7 +23,7 @@ class AuthenticateUserUseCase {
     const user = await this.usersRepository.findByUsername(username)
     if (!user) {
       throw new CustomError('Invalid username or password!', 401)
-    }
+    }    
 
     const isPasswordValid = await compare(password, user.password)
     
@@ -34,7 +36,7 @@ class AuthenticateUserUseCase {
       expiresIn: '1d'
     })
 
-    return { username, token }
+    return { username, token, account: user.account }
   }
 }
 

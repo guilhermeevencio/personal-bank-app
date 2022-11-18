@@ -35,7 +35,7 @@ class UserRepository implements IUsersRepository {
       const user = this.userRepository.create({ username, password })
 
       const errors = await validate(user)
-      
+
       if (errors.length > 0) {
         throw new CustomError('Make sure if your username has more than 3 charachters', 401)
       }
@@ -44,8 +44,8 @@ class UserRepository implements IUsersRepository {
 
       await this.queryRunner.commitTransaction()
     } catch (err) {
-        await this.queryRunner.rollbackTransaction()
-        throw new CustomError(err.message, 400)
+      await this.queryRunner.rollbackTransaction()
+      throw new CustomError(err.message, 400)
     }
 
   }
