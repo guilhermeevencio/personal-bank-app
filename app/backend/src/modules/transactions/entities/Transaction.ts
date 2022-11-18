@@ -10,10 +10,10 @@ class Transaction {
 
 
   @ManyToOne(() => Account, { eager: true })
-  debitedAcountId: Account
+  debitedAccountId: string
 
   @ManyToOne(() => Account, { eager: true })
-  creditedAccount: string
+  creditedAccountId: string
 
   value: number
 
