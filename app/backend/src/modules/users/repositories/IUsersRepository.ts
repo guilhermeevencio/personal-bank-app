@@ -1,4 +1,3 @@
-import { Account } from '../entities/Account'
 import { IUserDTO } from '../dtos/IUserDTO'
 import { User } from '../entities/User'
 
