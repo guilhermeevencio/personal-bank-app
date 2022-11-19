@@ -7,7 +7,7 @@ const transactionsRouter = Router()
 const createTransactionController = new CreateTransactionController()
 const findAllTransactionsByAccountIdController = new FindAllTransactionsByAccountIdController()
 
-transactionsRouter.post('/find', findAllTransactionsByAccountIdController.handle)
+transactionsRouter.post('/find-transactions', findAllTransactionsByAccountIdController.handle)
 transactionsRouter.post('/create', createTransactionController.handle)
 
 export { transactionsRouter }

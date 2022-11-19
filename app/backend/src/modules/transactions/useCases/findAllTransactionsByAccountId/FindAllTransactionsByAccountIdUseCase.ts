@@ -9,8 +9,8 @@ class FindAllTransactionsByAccountIdUseCase {
     private transactiosnRepository: ITransactionsRepository
   ) { }
 
-  async execute(accountId: string): Promise<Transaction[]> {
-    const transactions = await this.transactiosnRepository.findAllTransactionsByAccountId(accountId)
+  async execute(operation: 'cash-in' | 'cash-out' | 'all', accountId: string): Promise<Transaction[]> {
+    const transactions = await this.transactiosnRepository.findAllByOperation(operation, accountId)
 
     return transactions
   }

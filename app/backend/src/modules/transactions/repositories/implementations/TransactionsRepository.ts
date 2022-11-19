@@ -8,19 +8,19 @@ import { Account } from '../../../users/entities/Account';
 
 
 class TransactionsRepository implements ITransactionsRepository {
-  private transactionsRepository: Repository<Transaction>
-  private accountsRepository: Repository<Account>
-  private queryRunner: QueryRunner
+  private transactionsRepository: Repository<Transaction>;
+  private accountsRepository: Repository<Account>;
+  private queryRunner: QueryRunner;
 
   constructor() {
-    this.transactionsRepository = AppDataSource.getRepository(Transaction)
-    this.accountsRepository = AppDataSource.getRepository(Account)
-    this.queryRunner = AppDataSource.createQueryRunner()
+    this.transactionsRepository = AppDataSource.getRepository(Transaction);
+    this.accountsRepository = AppDataSource.getRepository(Account);
+    this.queryRunner = AppDataSource.createQueryRunner();
   }
 
   async findAccount(accountId: string): Promise<Account> {
-    const account = await this.accountsRepository.findOne({ where: { id: accountId } })
-    return account
+    const account = await this.accountsRepository.findOne({ where: { id: accountId } });
+    return account;
   }
 
   async createTransaction(data: ITransactionDTO): Promise<Transaction> {
@@ -33,23 +33,22 @@ class TransactionsRepository implements ITransactionsRepository {
         debitedAccountId,
         value,
         description
-      } = data
+      } = data;
 
-      const accountToAddMoney = await this.accountsRepository.findOne({ where: { id: creditedAccountId } })
+      const accountToAddMoney = await this.findAccount(creditedAccountId);
+      const accountToDebitMoney = await this.findAccount(debitedAccountId);
 
-      const accountToDebitMoney = await this.accountsRepository.findOne({ where: { id: debitedAccountId } })
-
-      if (accountToDebitMoney.balance < value) throw new CustomError('Insuficient funds!', 400)
+      if (accountToDebitMoney.balance < value) throw new CustomError('Insuficient funds!', 400);
 
       await this.accountsRepository.update(
         { id: creditedAccountId },
         { balance: (value + accountToAddMoney.balance) }
-      )
+      );
 
       await this.accountsRepository.update(
         { id: debitedAccountId },
         { balance: (accountToDebitMoney.balance - value) }
-      )
+      );
 
       const transaction = this.transactionsRepository.create(
         {
@@ -58,47 +57,47 @@ class TransactionsRepository implements ITransactionsRepository {
           creditedAccountId: accountToAddMoney,
           debitedAccountId: accountToDebitMoney,
         }
-      )
+      );
 
-      const createdTransaction = await this.transactionsRepository.save(transaction)
+      const createdTransaction = await this.transactionsRepository.save(transaction);
 
-      await this.queryRunner.commitTransaction()
-      return createdTransaction
+      await this.queryRunner.commitTransaction();
+      return createdTransaction;
     } catch (err) {
-      await this.queryRunner.rollbackTransaction()
-      throw new CustomError(err.message, 400)
+      await this.queryRunner.rollbackTransaction();
+      throw new CustomError(err.message, 400);
     }
   }
 
-  async findAllTransactionsByAccountId(accountId: string): Promise<Transaction[]> {
-    const account = await this.accountsRepository.findOne({ where: { id: accountId } })
-    
-    const transactions = await this.transactionsRepository.find({
-      where: [{ creditedAccountId: account }, { debitedAccountId: account }]
-    })
+  async findAllByOperation(
+    operation: 'cash-in' | 'cash-out' | 'all',
+    accountId: string
+  ): Promise<Transaction[]> {
+    const account = await this.findAccount(accountId);
 
-    return transactions
-  }
-
-  async findAllByOperation(operation: 'cash-in' | 'cash-out' | 'all', accountId: string): Promise<Transaction[]> {
-    const account = await this.findAccount(accountId)
     let transactions: Transaction[]
+
     switch (operation) {
-      case 'cash-in':
-        transactions = await this.transactionsRepository.find({ where: { creditedAccountId: account } })
-        return transactions
-      case 'cash-out':
-        transactions = await this.transactionsRepository.find({ where: { creditedAccountId: account } })
+      case ('cash-in'):
+        transactions = await this.transactionsRepository
+          .find({ where: { creditedAccountId: account } });
+        break
+      case ('cash-out'):
+        transactions = await this.transactionsRepository
+          .find({ where: { debitedAccountId: account } });
         return transactions
       case 'all':
-        transactions = await this.transactionsRepository.find({
-          where: [{ creditedAccountId: account }, { debitedAccountId: account }]
-        })
-        return transactions
+        transactions = await this.transactionsRepository
+          .find({
+            where: [{ creditedAccountId: account }, { debitedAccountId: account }]
+          });
+        break;
       default:
         break;
     }
+
+    return transactions;
   }
 }
 
-export { TransactionsRepository }
+export { TransactionsRepository };

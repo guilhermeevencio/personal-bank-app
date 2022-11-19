@@ -5,12 +5,12 @@ import { FindAllTransactionsByAccountIdUseCase } from "./FindAllTransactionsByAc
 
 class FindAllTransactionsByAccountIdController {
   async handle(req: Request, res: Response) {
-    const { accountId } = req.body    
-
+    const { accountId, operation } = req.body
+    
     const findAllTransactionsByAccountIdUseCase = container
       .resolve(FindAllTransactionsByAccountIdUseCase)
 
-    const transactions = await findAllTransactionsByAccountIdUseCase.execute(accountId)
+    const transactions = await findAllTransactionsByAccountIdUseCase.execute(operation, accountId)
 
     return res.status(200).json(transactions)
   }
