@@ -7,7 +7,7 @@ interface ITransactionsRepository {
   findAccount?(accountId: string): Promise<Account>
   findAllTransactionsByAccountId(accountId: string): Promise<Transaction[]>
   findAllByDate?(createdDate: Date): Promise<Transaction[]>
-  findAllByOperation?(operation: 'cash-out' | 'cash-in'): Promise<Transaction[]>
+  findAllByOperation(operation: 'cash-out' | 'cash-in' | 'all', accountId: string): Promise<Transaction[]>
 }
 
 export { ITransactionsRepository }

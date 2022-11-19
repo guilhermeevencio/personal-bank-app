@@ -1,10 +1,10 @@
-import { Transaction } from '../../entities/Transaction';
 import { Repository, QueryRunner } from 'typeorm';
-import { ITransactionsRepository } from '../ITransactionsRepository';
-import { Account } from '../../../users/entities/Account';
+import CustomError from '../../../../errors/CustomError';
 import AppDataSource from '../../../../database';
 import { ITransactionDTO } from '../../dtos/ITransactionDTO';
-import CustomError from '../../../../errors/CustomError';
+import { ITransactionsRepository } from '../ITransactionsRepository';
+import { Transaction } from '../../entities/Transaction';
+import { Account } from '../../../users/entities/Account';
 
 
 class TransactionsRepository implements ITransactionsRepository {
@@ -16,6 +16,11 @@ class TransactionsRepository implements ITransactionsRepository {
     this.transactionsRepository = AppDataSource.getRepository(Transaction)
     this.accountsRepository = AppDataSource.getRepository(Account)
     this.queryRunner = AppDataSource.createQueryRunner()
+  }
+
+  async findAccount(accountId: string): Promise<Account> {
+    const account = await this.accountsRepository.findOne({ where: { id: accountId } })
+    return account
   }
 
   async createTransaction(data: ITransactionDTO): Promise<Transaction> {
@@ -67,11 +72,6 @@ class TransactionsRepository implements ITransactionsRepository {
 
   async findAllTransactionsByAccountId(accountId: string): Promise<Transaction[]> {
     const account = await this.accountsRepository.findOne({ where: { id: accountId } })
-    // const teste = await AppDataSource.createQueryBuilder(Account, 'account')
-    //   .select("account.id", 'id')
-    //   .getMany()
-    // // .from('accounts', 'accounts')
-    // console.log(teste);
     
     const transactions = await this.transactionsRepository.find({
       where: [{ creditedAccountId: account }, { debitedAccountId: account }]
@@ -80,9 +80,24 @@ class TransactionsRepository implements ITransactionsRepository {
     return transactions
   }
 
-  async findAccount(accountId: string): Promise<Account> {
-    const account = await this.accountsRepository.findOne({ where: { id: accountId } })
-    return account
+  async findAllByOperation(operation: 'cash-in' | 'cash-out' | 'all', accountId: string): Promise<Transaction[]> {
+    const account = await this.findAccount(accountId)
+    let transactions: Transaction[]
+    switch (operation) {
+      case 'cash-in':
+        transactions = await this.transactionsRepository.find({ where: { creditedAccountId: account } })
+        return transactions
+      case 'cash-out':
+        transactions = await this.transactionsRepository.find({ where: { creditedAccountId: account } })
+        return transactions
+      case 'all':
+        transactions = await this.transactionsRepository.find({
+          where: [{ creditedAccountId: account }, { debitedAccountId: account }]
+        })
+        return transactions
+      default:
+        break;
+    }
   }
 }
 
