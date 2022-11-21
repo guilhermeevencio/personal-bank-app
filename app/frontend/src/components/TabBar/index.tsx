@@ -11,6 +11,7 @@ const TabBar = () => {
 
   return (
     <div className={styles.navigation}>
+      <h3>Olá, User!</h3>
       <ul>
         <li
           className={`${styles.list} ${
