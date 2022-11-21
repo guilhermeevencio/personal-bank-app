@@ -5,25 +5,22 @@ services:
     container_name: app-frontend
     ports:
       - 3000:3000
-    platform: linux/x86_64
     working_dir: /app-frontend
-    volumes: 
-      - ./frontend:/app-frontend
-      - /app-frontend/node_modules
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
   backend:
     container_name: app-backend
     build: ./backend
     ports:
       - 3001:3001
-    platform: linux/x86_64
     working_dir: /app-backend
     volumes: 
       - ./backend:/app-backend
       - /app-backend/node_modules/bcrypt/
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - APP_PORT=3001
       - JWT_SECRET=jwt_secret
@@ -32,10 +29,13 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_DB=personal_bank
       - POSTGRES_PORT=5432
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:3001"]
+      timeout: 10s
+      retries: 5
   db:
     image: postgres
     container_name: db
-    platform: linux/x86_64
     ports:
       - 5432:5432
     environment:
