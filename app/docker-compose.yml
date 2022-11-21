@@ -14,9 +14,6 @@ services:
     build: ./backend
     ports:
       - 3001:3001
-    working_dir: /app-backend
-    volumes: 
-      - ./backend:/app-backend
     depends_on:
       db:
         condition: service_healthy
@@ -44,7 +41,6 @@ services:
     restart: 'always'
     volumes:
       - pgdata:/data/postgres
-      - /app-backend/node_modules/bcrypt
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       timeout: 10s
