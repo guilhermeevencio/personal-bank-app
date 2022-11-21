@@ -1,4 +1,4 @@
-import { Repository, QueryRunner } from 'typeorm';
+import { Repository, QueryRunner, Between } from 'typeorm';
 import CustomError from '../../../../errors/CustomError';
 import AppDataSource from '../../../../database';
 import { ITransactionDTO } from '../../dtos/ITransactionDTO';
@@ -94,10 +94,24 @@ class TransactionsRepository implements ITransactionsRepository {
         break;
       default:
         break;
-    }
+    };
 
     return transactions;
-  }
-}
+  };
+
+  async filterByDate(
+    minDate: Date,
+    maxDate: Date,
+    operation: 'cash-in' | 'cash-out' | 'all',
+    accountId: string
+  ): Promise<Transaction[]> {
+    
+    const transactions = await this.findAllByOperation(operation, accountId);
+    const filteredTransactions = transactions.filter(({ createdAt }) => (
+      createdAt >= minDate && createdAt <= maxDate
+    ));
+    return filteredTransactions;
+  };
+};
 
 export { TransactionsRepository };

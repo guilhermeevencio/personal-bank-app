@@ -1,6 +1,6 @@
 import { ITransactionsRepository } from "../../repositories/ITransactionsRepository";
 import { inject, injectable } from "tsyringe";
-import { Transaction } from "modules/transactions/entities/Transaction";
+import { Transaction } from "../../entities/Transaction";
 
 @injectable()
 class FindAllTransactionsByAccountIdUseCase {
