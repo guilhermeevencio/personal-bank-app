@@ -10,6 +10,11 @@
   font-size: 1.25rem;
   top: 0;
   left: 0;
+  animation: fadein 1s ease-in-out;
+}
+
+.navigation h3 {
+  animation: translate 1s ease-in-out;
 }
 
 .navigation ul {
@@ -50,6 +55,7 @@
   transition: 0.5s;
   color: var(--red);
   width: 4rem;
+  animation: fadein 1.5s ease-in-out;
 }
 
 .navigation ul li.active a .icon {
@@ -126,4 +132,26 @@
 
 .navigation ul li:nth-child(5).active ~ .indicator {
   transform: translateX(calc(70px * 4));
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes translate {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
