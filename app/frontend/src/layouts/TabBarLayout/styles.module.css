@@ -1,0 +1,5 @@
+.tabBar {
+  width: 390px;
+  background-color: var(--darkGrey);
+  border: 2px solid red;
+}

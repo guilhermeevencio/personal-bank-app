@@ -16,6 +16,7 @@
 box-sizing: border-box;
 margin: 0;
 padding: 0;
+margin: 0 auto;
 }
 
 body {
@@ -26,4 +27,5 @@ background-color: var(--darkerGrey);
 min-height: 100vh;
 -webkit-font-smoothing: antialiased;
 text-decoration: none;
+width: 390px;
 }
