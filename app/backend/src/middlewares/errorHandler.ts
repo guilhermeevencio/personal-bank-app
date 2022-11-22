@@ -2,6 +2,8 @@ import { ErrorRequestHandler } from 'express';
 import CustomError from '../errors/CustomError';
 
 const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
+  console.log(error);
+  
   if (error instanceof CustomError) {
     return res.status(error.status).json({ message: error.message });
   }
