@@ -1,12 +1,11 @@
-import React from 'react'
 import styles from './styles.module.css'
 import { Outlet } from 'react-router-dom'
-import TabBar from '../../components/TabBar'
+import { ProfileSection } from '../../components/ProfileSection'
 
 function TabBarLayout() {
   return (
     <div className={styles.tabBar}>
-      <TabBar />
+      <ProfileSection />
       <Outlet />
     </div>
   )

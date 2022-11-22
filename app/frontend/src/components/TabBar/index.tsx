@@ -1,17 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styles from './styles.module.css'
 import { useLocation, Link } from 'react-router-dom'
 import { BiHomeAlt, BiUserCircle } from 'react-icons/bi'
 import { HiOutlineCreditCard } from 'react-icons/hi'
 import { RiBillLine } from 'react-icons/ri'
 import { AiOutlineRocket } from 'react-icons/ai'
+import { AppContext, IAppContext } from '../../context/AppContext'
 
 const TabBar = () => {
   const location = useLocation()
+  const { userInfo } = useContext(AppContext) as IAppContext
 
   return (
     <div className={styles.navigation}>
-      <h3>Olá, User!</h3>
+      <h3>{`Olá, ${userInfo?.username}!` || 'Olá, Usuário!'}</h3>
       <ul>
         <li
           className={`${styles.list} ${

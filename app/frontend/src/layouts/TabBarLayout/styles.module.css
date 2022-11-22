@@ -1,5 +1,8 @@
 .tabBar {
-  width: 390px;
-  background-color: var(--darkGrey);
-  border: 2px solid red;
+  background-color: var(--darkerGrey);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 100vh;
+  width: 100%;
 }
