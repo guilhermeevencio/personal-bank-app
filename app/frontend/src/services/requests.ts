@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { IUser } from '../interfaces/User'
 
 const baseURL = 'http://localhost:3001'
 
@@ -18,7 +17,7 @@ const loginRequest = async ({ username, password }: LoginRequestDTO) => {
       baseURL,
     })
     const response = await instance.post('/sessions', { username, password })
-    return response.data as IUser
+    return response.data
   } catch (e) {
     return e
   }

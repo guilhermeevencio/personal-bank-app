@@ -1,0 +1,31 @@
+.historyCard {
+  margin: 1rem;
+  background-color: var(--darkGrey);
+  width: 400px;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+
+.cardItem {
+  color: var(--lighterGrey);
+}
+
+.cardItem h3 {
+  color: var(--red);
+  font-weight: 400;
+}
+
+.historyContainer a {
+  text-decoration: none;
+}
+
+.historyContainer h2 {
+  text-align: center;
+  color: var(--red);
+}
+
+.historyContainer {
+  width: 40%;
+  margin-top: 2rem;
+}
