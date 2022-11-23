@@ -6,7 +6,7 @@ class Account {
   @PrimaryColumn()
   id: string
 
-  @Column({ default: 100 })
+  @Column({ default: 10000 })
   balance: number
 
 
