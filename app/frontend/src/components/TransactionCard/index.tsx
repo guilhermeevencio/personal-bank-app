@@ -7,6 +7,7 @@ export function TransactionCard({
   debitedAccountId,
   creditedAccountId,
   transactionId,
+  value,
 }: InferProps<typeof TransactionCard.propTypes>) {
   return (
     <div key={transactionId} className={styles.historyCard}>
@@ -27,6 +28,10 @@ export function TransactionCard({
         <h3>Data da Transferência</h3>
         <p>{createdAt}</p>
       </div>
+      <div className={styles.cardItem}>
+        <h3>Valor</h3>
+        <p>{value}</p>
+      </div>
     </div>
   )
 }
@@ -37,4 +42,5 @@ TransactionCard.propTypes = {
   debitedAccountId: PropTypes.string.isRequired,
   creditedAccountId: PropTypes.string.isRequired,
   transactionId: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
 }

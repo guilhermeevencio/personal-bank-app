@@ -1,13 +1,24 @@
-import React, { FormEvent, SyntheticEvent, useEffect, useState } from 'react'
+import { AxiosError } from 'axios'
+import React, {
+  FormEvent,
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+import { AppContext, IAppContext } from '../../context/AppContext'
 import { IUser } from '../../interfaces/User'
 import { transactionsHistoryRequest } from '../../services/requests'
 import styles from './styles.module.css'
 
 export function TransactionsHistoryForm() {
-  const [minDate, setMinDate] = useState<string>('')
-  const [maxDate, setMaxDate] = useState<string>('')
+  const [minDateStr, setMinDate] = useState<string>('')
+  const [maxDateStr, setMaxDate] = useState<string>('')
   const [user, setUser] = useState<IUser | null>(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   const [operation, setOperation] = useState('all')
+
+  const { setTransactions } = useContext(AppContext) as IAppContext
 
   useEffect(() => {
     const userInfoFromLS = localStorage.getItem('userInfo')
@@ -40,14 +51,20 @@ export function TransactionsHistoryForm() {
   const handleSubmit = async (e: SyntheticEvent): Promise<void> => {
     e.preventDefault()
     if (user) {
-      const teste = await transactionsHistoryRequest({
-        minDate,
-        maxDate,
+      const transactions = await transactionsHistoryRequest({
+        minDateStr,
+        maxDateStr,
         accountId: user?.account.id,
         operation,
         token: user?.token,
       })
-      console.log(teste)
+      if (transactions instanceof AxiosError) {
+        setErrorMessage(transactions.response?.data.message)
+      } else {
+        setErrorMessage(null)
+        setTransactions(transactions)
+        localStorage.setItem('transactions', JSON.stringify(transactions))
+      }
     }
   }
 
@@ -88,6 +105,7 @@ export function TransactionsHistoryForm() {
           </select>
         </div>
         <button type="submit">Filtrar</button>
+        {errorMessage && <p>{errorMessage}</p>}
       </form>
     </div>
   )

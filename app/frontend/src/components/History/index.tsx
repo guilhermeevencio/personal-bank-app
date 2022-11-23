@@ -7,7 +7,7 @@ export function History() {
   return (
     <div className={styles.historyContainer}>
       <h2>Últimas Transações</h2>
-      <Link to="/transactions-history">
+      <Link to="/transactions-history" className={styles.linksContainer}>
         {transactions &&
           transactions.map(
             (
@@ -17,6 +17,7 @@ export function History() {
                 debitedAccountId,
                 description,
                 id,
+                value,
               },
               index,
             ) => {
@@ -25,10 +26,11 @@ export function History() {
                   <TransactionCard
                     key={id}
                     createdAt={createdAt}
-                    debitedAccountId={debitedAccountId.id}
+                    debitedAccountId={debitedAccountId}
                     description={description}
-                    creditedAccountId={creditedAccountId.id}
+                    creditedAccountId={creditedAccountId}
                     transactionId={id}
+                    value={value / 100}
                   />
                 )
               }
