@@ -1,3 +1,5 @@
 .transactionsContainer {
   width: 75%;
+  position: absolute;
+  right: 1rem;
 }

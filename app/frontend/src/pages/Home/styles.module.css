@@ -1,9 +1,13 @@
 .homeContainer {
   width: 75%;
+  position: absolute;
+  right: 1rem;
 }
 
 .historyContainer {
   animation: fadein 0.5s ease-in-out;
+  display: flex;
+  flex-direction: row;
 }
 
 @keyframes fadein {

@@ -8,6 +8,9 @@
   height: 90%;
   margin-top: 2rem;
   border-radius: 12px;
+  overflow: hidden;
+  position: fixed;
+  left: 2rem;
 }
 
 .headerContainer {

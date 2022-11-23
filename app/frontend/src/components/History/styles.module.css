@@ -14,6 +14,7 @@
 .cardItem h3 {
   color: var(--red);
   font-weight: 400;
+  margin-bottom: 2rem;
 }
 
 .historyContainer a {
@@ -26,6 +27,13 @@
 }
 
 .historyContainer {
-  width: 40%;
-  margin-top: 2rem;
+  width: 100%;
+  height: 50vh;
+  margin-top: 4rem;
+}
+
+.linksContainer {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
 }
