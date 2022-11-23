@@ -10,8 +10,8 @@ interface LoginRequestDTO {
 interface ITransactionsHistory {
   accountId: string
   operation: string
-  minDate?: string
-  maxDate?: string
+  minDateStr?: string
+  maxDateStr?: string
   token: string
 }
 
@@ -58,8 +58,8 @@ const registerRequest = async ({ username, password }: LoginRequestDTO) => {
 }
 
 const transactionsHistoryRequest = async ({
-  minDate,
-  maxDate,
+  minDateStr,
+  maxDateStr,
   accountId,
   operation,
   token,
@@ -70,12 +70,12 @@ const transactionsHistoryRequest = async ({
       headers: { Authorization: `Bearer ${token}` },
     })
 
-    if (minDate && maxDate) {
+    if (!!minDateStr && !!maxDateStr) {
       const response = await instance.post(
         '/transactions/find-transactions-by-date',
         {
-          minDate,
-          maxDate,
+          minDateStr,
+          maxDateStr,
           accountId,
           operation,
         },

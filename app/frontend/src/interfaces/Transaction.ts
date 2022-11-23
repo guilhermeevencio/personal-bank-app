@@ -1,13 +1,8 @@
 export interface ITransaction {
   id: string
+  debitedAccountId: string
   createdAt: string
   description: string
-  debitedAccountId: {
-    id: string
-    balance: number
-  }
-  creditedAccountId: {
-    id: string
-    balance: number
-  }
+  creditedAccountId: string
+  value: number
 }
