@@ -1,5 +1,6 @@
 import { FormEvent, SyntheticEvent, useEffect, useState } from 'react'
 import { IUser } from '../../interfaces/User'
+import { createTransactionRequest } from '../../services/requests'
 import styles from './styles.module.css'
 
 export function CreateTransactionForm() {
@@ -33,9 +34,24 @@ export function CreateTransactionForm() {
     }
   }
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault()
-    console.log(user, creditedAccount, description, transactionValue)
+    const transactionResponse = await createTransactionRequest({
+      debitedAccountId: user?.account.id || '',
+      creditedAccount,
+      description,
+      value: transactionValue * 100,
+      token: user?.token || '',
+    })
+
+    console.log(transactionResponse)
+
+    // console.log(
+    //   user?.account.id,
+    //   creditedAccount,
+    //   description,
+    //   transactionValue * 100,
+    // )
   }
 
   return (
@@ -48,7 +64,7 @@ export function CreateTransactionForm() {
         </div>
         <div className={styles.inputDiv}>
           <label htmlFor="description">Descrição</label>
-          <input type="text" onChange={handleChange} />
+          <input type="text" onChange={handleChange} id="description" />
         </div>
         <div className={styles.inputDiv}>
           <label htmlFor="value"> Valor</label>
