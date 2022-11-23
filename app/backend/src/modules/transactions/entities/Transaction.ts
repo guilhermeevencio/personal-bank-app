@@ -12,13 +12,13 @@ class Transaction {
   @Column()
   debitedAccountId: string
   @JoinColumn({ name: 'debitedAccountId' })
-  @ManyToOne(() => Account, { eager: true })
+  @ManyToOne(() => Account)
   debitedAccount: Account
 
   @Column()
   creditedAccountId: string
   @JoinColumn({ name: 'creditedAccountId' })
-  @ManyToOne(() => Account, { eager: true })
+  @ManyToOne(() => Account)
   creditedAccount: Account
 
   @Column()

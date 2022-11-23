@@ -6,8 +6,8 @@ import { FilterTransacitionsByDateUseCase } from './FilterTransactionsByDateUseC
 class FilterTransactionsByIdController {
   async handle(req: Request, res: Response) {
     const {
-      minDateArr,
-      maxDateArr,
+      minDateStr,
+      maxDateStr,
       operation,
       accountId,
     } = req.body;
@@ -16,7 +16,7 @@ class FilterTransactionsByIdController {
       .resolve(FilterTransacitionsByDateUseCase);
 
     const transactions = await filterTransacitionsByDateUseCase
-      .execute(minDateArr, maxDateArr, operation, accountId);
+      .execute(minDateStr, maxDateStr, operation, accountId);
 
     return res.status(200).json(transactions);
   };

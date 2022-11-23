@@ -15,6 +15,7 @@ class FilterTransacitionsByDateUseCase {
     operation: 'cash-in' | 'cash-out' | 'all',
     accountId: string
   ): Promise<Transaction[]> {
+    
     const minDate = new Date(minDateStr);
     const maxDate = new Date(maxDateStr);
     const transactions = await this.transactiosnRepository.filterByDate(minDate, maxDate, operation, accountId);
