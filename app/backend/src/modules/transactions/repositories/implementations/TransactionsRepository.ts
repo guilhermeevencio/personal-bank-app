@@ -5,16 +5,19 @@ import { ITransactionDTO } from '../../dtos/ITransactionDTO';
 import { ITransactionsRepository } from '../ITransactionsRepository';
 import { Transaction } from '../../entities/Transaction';
 import { Account } from '../../../users/entities/Account';
+import { User } from '../../../users/entities/User';
 
 
 class TransactionsRepository implements ITransactionsRepository {
   private transactionsRepository: Repository<Transaction>;
   private accountsRepository: Repository<Account>;
+  private usersRepository: Repository<User>;
   private queryRunner: QueryRunner;
 
   constructor() {
     this.transactionsRepository = AppDataSource.getRepository(Transaction);
     this.accountsRepository = AppDataSource.getRepository(Account);
+    this.usersRepository = AppDataSource.getRepository(User)
     this.queryRunner = AppDataSource.createQueryRunner();
   }
 
@@ -29,20 +32,23 @@ class TransactionsRepository implements ITransactionsRepository {
 
     try {
       const {
-        creditedAccountId,
+        creditedAccount,
         debitedAccountId,
         value,
         description
       } = data;
 
-      const accountToAddMoney = await this.findAccount(creditedAccountId);
       const accountToDebitMoney = await this.findAccount(debitedAccountId);
+      const userToCreditMoney = await this.usersRepository.findOne({where: {
+        username: creditedAccount
+      }});
+      
 
       if (accountToDebitMoney.balance < value) throw new CustomError('Insuficient funds!', 400);
 
       await this.accountsRepository.update(
-        { id: creditedAccountId },
-        { balance: (value + accountToAddMoney.balance) }
+        { id: userToCreditMoney.account.id },
+        { balance: (value + userToCreditMoney.account.balance) }
       );
 
       await this.accountsRepository.update(
@@ -54,8 +60,8 @@ class TransactionsRepository implements ITransactionsRepository {
         {
           value,
           description,
-          creditedAccountId: accountToAddMoney,
-          debitedAccountId: accountToDebitMoney,
+          creditedAccountId: userToCreditMoney.account.id,
+          debitedAccountId: accountToDebitMoney.id,
         }
       );
 
@@ -80,16 +86,16 @@ class TransactionsRepository implements ITransactionsRepository {
     switch (operation) {
       case ('cash-in'):
         transactions = await this.transactionsRepository
-          .find({ where: { creditedAccountId: account } });
+          .find({ where: { creditedAccountId: account.id } });
         break
       case ('cash-out'):
         transactions = await this.transactionsRepository
-          .find({ where: { debitedAccountId: account } });
+          .find({ where: { debitedAccountId: account.id } });
         return transactions
       case 'all':
         transactions = await this.transactionsRepository
           .find({
-            where: [{ creditedAccountId: account }, { debitedAccountId: account }]
+            where: [{ creditedAccountId: account.id }, { debitedAccountId: account.id }]
           });
         break;
       default:

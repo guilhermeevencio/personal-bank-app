@@ -1,5 +1,5 @@
 interface ITransactionDTO {
-  creditedAccountId: string
+  creditedAccount: string
   debitedAccountId: string
   description: string
   value: number

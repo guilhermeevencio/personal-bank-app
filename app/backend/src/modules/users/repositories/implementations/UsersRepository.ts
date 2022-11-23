@@ -24,7 +24,7 @@ class UserRepository implements IUsersRepository {
   }
 
   async create({ username, password }: IUserDTO): Promise<void> {
-    const initialBalance = 100
+    const initialBalance = 10000
     await this.queryRunner.connect()
     await this.queryRunner.startTransaction()
 

@@ -10,13 +10,13 @@ class FilterTransacitionsByDateUseCase {
   ) {};
 
   async execute(
-    [minY, minM, minD]: number[],
-    [maxY, maxM, maxD]: number[],
+    minDateStr: string,
+    maxDateStr: string,
     operation: 'cash-in' | 'cash-out' | 'all',
     accountId: string
   ): Promise<Transaction[]> {
-    const minDate = new Date(`${minY}-${minM}-${minD}`);
-    const maxDate = new Date(`${maxY}-${maxM}-${maxD}`);
+    const minDate = new Date(minDateStr);
+    const maxDate = new Date(maxDateStr);
     const transactions = await this.transactiosnRepository.filterByDate(minDate, maxDate, operation, accountId);
     return transactions;
   };
