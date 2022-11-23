@@ -7,7 +7,7 @@ export function Home() {
     <div className={styles.homeContainer}>
       <div>
         <AccountHeader />
-        <div>
+        <div className={styles.historyContainer}>
           <History />
         </div>
       </div>
