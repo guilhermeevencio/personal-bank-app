@@ -52,3 +52,23 @@
   transition: 0.5s ease-in-out;
   padding: 1rem;
 }
+
+.logoutContainer {
+  margin-top: 8rem;
+  bottom: 4rem;
+  display: flex;
+  width: 100%;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+
+.logoutContainer button {
+  background-color: var(--darkRed);
+  color: var(--lighterGrey);
+  border: none;
+  font-size: 16pt;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}

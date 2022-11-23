@@ -1,12 +1,20 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { TransactionCard } from '../../components/TransactionCard'
 import { TransactionsHistoryForm } from '../../components/TransactionsHistoryForm'
 import { AppContext, IAppContext } from '../../context/AppContext'
 import styles from './styles.module.css'
 
 export function TransactionsHistory() {
-  const { transactions } = useContext(AppContext) as IAppContext
-  console.log(transactions)
+  const { transactions, userInfo } = useContext(AppContext) as IAppContext
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate('/')
+    }
+  }, [])
 
   return (
     <div className={styles.transactionsHistoryContainer}>
