@@ -20,7 +20,7 @@ export function AccountHeader() {
       </div>
       <div className={styles.balanceSection}>
         <h3>Saldo</h3>
-        <p>{user?.account.balance || 'R$ 100,00'}</p>
+        <p>{user ? user?.account.balance / 100 : null}</p>
       </div>
     </div>
   )
