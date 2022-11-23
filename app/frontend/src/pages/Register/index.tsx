@@ -1,12 +1,17 @@
 import styles from './styles.module.css'
 import { FiAlertCircle } from 'react-icons/fi'
-import { FormEvent, SyntheticEvent, useState } from 'react'
+import { FormEvent, SyntheticEvent, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { registerRequest } from '../../services/requests'
+import { AxiosError } from 'axios'
+import { AppContext, IAppContext } from '../../context/AppContext'
+import { IUser } from '../../interfaces/User'
 
 export function Register() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const { setUserInfo } = useContext(AppContext) as IAppContext
   const navigate = useNavigate()
 
   const handleChange = (e: FormEvent<HTMLInputElement>): void => {
@@ -17,19 +22,19 @@ export function Register() {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault()
 
-    // const loginResponse: IUser = await loginRequest({
-    //   username,
-    //   password,
-    // })
+    const registerResponse: IUser = await registerRequest({
+      username,
+      password,
+    })
 
-    // if (loginResponse instanceof AxiosError) {
-    //   setErrorMessage(loginResponse.response?.data.message)
-    // } else {
-    //   setErrorMessage(null)
-    //   setUserInfo(loginResponse)
-    //   localStorage.setItem('userInfo', JSON.stringify(loginResponse))
-    //   navigate('/home')
-    // }
+    if (registerResponse instanceof AxiosError) {
+      setErrorMessage(registerResponse.response?.data.message)
+    } else {
+      setErrorMessage(null)
+      setUserInfo(registerResponse)
+      localStorage.setItem('userInfo', JSON.stringify(registerResponse))
+      navigate('/home')
+    }
   }
 
   return (

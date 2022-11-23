@@ -15,6 +15,14 @@ interface ITransactionsHistory {
   token: string
 }
 
+interface ICreateTransaction {
+  debitedAccountId: string
+  creditedAccount: string
+  description: string
+  value: number
+  token: string
+}
+
 export interface IErrorResponse {
   error: { message: string }
 }
@@ -26,6 +34,24 @@ const loginRequest = async ({ username, password }: LoginRequestDTO) => {
     })
     const response = await instance.post('/sessions', { username, password })
     return response.data
+  } catch (e) {
+    return e
+  }
+}
+
+const registerRequest = async ({ username, password }: LoginRequestDTO) => {
+  try {
+    const instance = axios.create({
+      baseURL,
+    })
+    const response = await instance.post('/users', { username, password })
+    console.log(response)
+
+    const authResponse = await instance.post('/sessions', {
+      username,
+      password,
+    })
+    return authResponse.data
   } catch (e) {
     return e
   }
@@ -67,4 +93,34 @@ const transactionsHistoryRequest = async ({
   }
 }
 
-export { loginRequest, transactionsHistoryRequest }
+const createTransactionRequest = async ({
+  debitedAccountId,
+  creditedAccount,
+  description,
+  value,
+  token,
+}: ICreateTransaction) => {
+  try {
+    const instance = axios.create({
+      baseURL,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    const response = await instance.post('/transactions/create', {
+      debitedAccountId,
+      creditedAccount,
+      description,
+      value,
+    })
+    return response.data
+  } catch (error) {
+    return error
+  }
+}
+
+export {
+  loginRequest,
+  transactionsHistoryRequest,
+  createTransactionRequest,
+  registerRequest,
+}

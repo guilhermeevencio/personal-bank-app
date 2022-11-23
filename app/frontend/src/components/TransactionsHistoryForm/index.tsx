@@ -17,8 +17,6 @@ export function TransactionsHistoryForm() {
     }
   }, [])
 
-  console.log(user?.account.id, minDate, maxDate, operation)
-
   const handleChange = (e: FormEvent<HTMLInputElement>): void => {
     const id = e.currentTarget.id
     switch (id) {
@@ -36,7 +34,6 @@ export function TransactionsHistoryForm() {
   const handleOperationChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
   ): void => {
-    console.log(e.currentTarget.value)
     setOperation(e.currentTarget.value)
   }
 
