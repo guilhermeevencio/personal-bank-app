@@ -1,15 +1,34 @@
+import React, { useEffect, useState } from 'react'
 import { CiUser } from 'react-icons/ci'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { IUser } from '../../interfaces/User'
 import styles from './styles.module.css'
 
 export function ProfileSection() {
   const location = useLocation()
+  const [user, setUser] = useState<IUser | null>(null)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const userFromLS = localStorage.getItem('userInfo')
+    if (userFromLS) {
+      const parsed: IUser = JSON.parse(userFromLS)
+      setUser(parsed)
+    }
+  }, [])
+
+  const handleLogout = (e: React.MouseEvent<HTMLElement>) => {
+    localStorage.removeItem('userInfo')
+    localStorage.removeItem('transactions')
+    navigate('/')
+  }
 
   return (
     <div className={styles.profileContainer}>
       <div className={styles.headerContainer}>
         <CiUser size={64} />
-        <h1>Olá, User!</h1>
+        <h2>{`Olá, ${user?.username!}`}</h2>
       </div>
       <div className={styles.navigation}>
         <ul>
@@ -60,7 +79,11 @@ export function ProfileSection() {
               <span className={styles.text}>Perfil</span>
             </Link>
           </li>
-          <div className={styles.indicator}></div>
+          <div className={styles.logoutContainer}>
+            <button type="button" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </ul>
       </div>
     </div>
