@@ -1,12 +1,13 @@
 import React, { FormEvent, SyntheticEvent, useEffect, useState } from 'react'
 import { IUser } from '../../interfaces/User'
 import { transactionsHistoryRequest } from '../../services/requests'
+import styles from './styles.module.css'
 
 export function TransactionsHistoryForm() {
   const [minDate, setMinDate] = useState<string>('')
   const [maxDate, setMaxDate] = useState<string>('')
   const [user, setUser] = useState<IUser | null>(null)
-  const [operation, setOperation] = useState('')
+  const [operation, setOperation] = useState('all')
 
   useEffect(() => {
     const userInfoFromLS = localStorage.getItem('userInfo')
@@ -54,31 +55,42 @@ export function TransactionsHistoryForm() {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="date"
-          placeholder="menor data..."
-          id="minDate"
-          onChange={handleChange}
-        />
-        <input
-          type="date"
-          placeholder="maior data..."
-          id="maxDate"
-          onChange={handleChange}
-        />
-        <select
-          id="operation"
-          placeholder="tipo de transação..."
-          onChange={handleOperationChange}
-        >
-          <option disabled>selecione um tipo</option>
-          <option value="all">Todas</option>
-          <option value="cash-in">Transefências Realizadas</option>
-          <option value="cash-out">Transferências Recebidas</option>
-        </select>
-        <button type="submit">Enviar</button>
+    <div className={styles.transactionsHistoryFormContainer}>
+      <form onSubmit={handleSubmit} className={styles.formStyle}>
+        <div className={styles.inputContainer}>
+          <label htmlFor="minDate">De:</label>
+          <input
+            type="date"
+            placeholder="menor data..."
+            id="minDate"
+            onChange={handleChange}
+          />
+        </div>
+        <div className={styles.inputContainer}>
+          <label htmlFor="maxDate">Até:</label>
+          <input
+            type="date"
+            placeholder="maior data..."
+            id="maxDate"
+            onChange={handleChange}
+          />
+        </div>
+        <div className={styles.selectContainer}>
+          <label>Tipo de transação</label>
+          <select
+            id="operation"
+            placeholder="tipo de transação..."
+            onChange={handleOperationChange}
+          >
+            <option disabled>selecione um tipo</option>
+            <option value="all" defaultChecked>
+              Todas
+            </option>
+            <option value="cash-in">Transefências Realizadas</option>
+            <option value="cash-out">Transferências Recebidas</option>
+          </select>
+        </div>
+        <button type="submit">Filtrar</button>
       </form>
     </div>
   )
