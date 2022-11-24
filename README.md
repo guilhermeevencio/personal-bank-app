@@ -29,11 +29,14 @@ O Personal Bank consiste em uma aplicação em que o usuário é capaz de se cad
 
 ### ⚠️ Para rodar a aplicação, precisaremos do Docker instalado! ⚠️
 
-1 - Clone o repositório:
+1 - Acesse repositório pelo terminal:
  - ```git clone git@github.com:guilhermeevencio/personal-bank-app.git```
  
+ > No caso de repositório baixado em formato zip, extraia pule para o passo 2
+ 
 2 - No terminal, acesse o diretório /app:
- - ```cd personal-bank-app/app```
+ - ```cd personal-bank-app/app``` ou ```cd personal-bank-app-main/app```
+ > Atentar para o nome da pasta após ser extraída.
  
 3 - Rode o comando abaixo para subir os containers do Docker:
  - ```docker compose up -d```
