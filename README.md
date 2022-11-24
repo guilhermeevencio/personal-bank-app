@@ -42,7 +42,7 @@ O Personal Bank consiste em uma aplicação em que o usuário é capaz de se cad
  - ```docker exec -it app-backend /bin/sh```
 
 5 - Rode o seguinte comando para rodar as migrações do banco de dados:
- - ```npm run typeorm migration:run````
+ - ```npm run typeorm migration:run```
  
 6 - Acesse a porta 3000 do localhost para utilizar a aplicação:
  - ```http://localhost:3000/```
