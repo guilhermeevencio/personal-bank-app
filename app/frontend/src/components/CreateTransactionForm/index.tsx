@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { FormEvent, SyntheticEvent, useEffect, useState } from 'react'
 import { IUser } from '../../interfaces/User'
 import { createTransactionRequest } from '../../services/requests'
@@ -7,6 +8,8 @@ export function CreateTransactionForm() {
   const [creditedAccount, setCreditedAccount] = useState('')
   const [description, setDecription] = useState('')
   const [transactionValue, setTransactionValue] = useState(0)
+  const [success, setSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [user, setUser] = useState<IUser | null>(null)
 
   useEffect(() => {
@@ -44,14 +47,16 @@ export function CreateTransactionForm() {
       token: user?.token || '',
     })
 
-    console.log(transactionResponse)
-
-    // console.log(
-    //   user?.account.id,
-    //   creditedAccount,
-    //   description,
-    //   transactionValue * 100,
-    // )
+    if (transactionResponse instanceof AxiosError) {
+      setSuccess(false)
+      setErrorMessage('Verifique se os campos foram corretamente preenchidos.')
+    } else {
+      setErrorMessage(null)
+      setSuccess(true)
+      setCreditedAccount('')
+      setDecription('')
+      setTransactionValue(0)
+    }
   }
 
   return (
@@ -60,17 +65,34 @@ export function CreateTransactionForm() {
       <form onSubmit={handleSubmit} className={styles.formStyle}>
         <div className={styles.inputDiv}>
           <label htmlFor="creditedAccount">Enviar para</label>
-          <input type="text" id="creditedAccount" onChange={handleChange} />
+          <input
+            type="text"
+            id="creditedAccount"
+            onChange={handleChange}
+            value={creditedAccount}
+          />
         </div>
         <div className={styles.inputDiv}>
           <label htmlFor="description">Descrição</label>
-          <input type="text" onChange={handleChange} id="description" />
+          <input
+            type="text"
+            onChange={handleChange}
+            id="description"
+            value={description}
+          />
         </div>
         <div className={styles.inputDiv}>
           <label htmlFor="value"> Valor</label>
-          <input type="number" id="value" onChange={handleChange} />
+          <input
+            type="number"
+            id="value"
+            onChange={handleChange}
+            value={String(transactionValue)}
+          />
         </div>
         <button>Finalizar transação</button>
+        {success ? <p>Transferência realizada com sucesso!</p> : null}
+        {errorMessage ? <p>{errorMessage}</p> : null}
       </form>
     </div>
   )
